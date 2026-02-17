@@ -169,7 +169,7 @@
     <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
       <!-- Logo -->
       <div class="fade-in mb-10">
-        <img src="assets/konfeks-logo.png" alt="KONFEKS D.O.O." class="mx-auto w-72 md:w-96 drop-shadow-2xl">
+        <img id="heroLogo" src="assets/konfeks-logo.png" alt="KONFEKS D.O.O." class="mx-auto w-72 md:w-96 drop-shadow-2xl">
       </div>
 
       <!-- Headline -->
@@ -776,6 +776,42 @@
       resize();
       createNodes();
       animate();
+    })();
+
+    // ===== REMOVE WHITE/GRAY BACKGROUND FROM LOGO PNG =====
+    (function () {
+      function processLogo(img) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.drawImage(img, 0, 0);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const d = imageData.data;
+
+        for (let i = 0; i < d.length; i += 4) {
+          const r = d[i], g = d[i + 1], b = d[i + 2];
+          const max = Math.max(r, g, b);
+          const min = Math.min(r, g, b);
+          const chroma = max - min;
+
+          // Neutral (low-chroma) and bright pixels are background — make transparent
+          if (chroma < 40 && min > 140) {
+            d[i + 3] = 0;
+          }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        img.src = canvas.toDataURL('image/png');
+      }
+
+      const heroLogo = document.getElementById('heroLogo');
+      if (heroLogo.complete && heroLogo.naturalWidth > 0) {
+        processLogo(heroLogo);
+      } else {
+        heroLogo.addEventListener('load', () => processLogo(heroLogo));
+      }
     })();
   </script>
 
