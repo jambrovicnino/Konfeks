@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konfeks d.o.o.</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Palatino Linotype', 'Palatino', serif;
+      background-color: #fefefe;
+      color: #2d3436;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, #fff5f5 0%, #fef9ef 50%, #f0fff4 100%);
+      padding: 60px 20px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo-container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .logo-container img {
+      width: 100%;
+      height: auto;
+    }
+
+    nav {
+      background: #2d3436;
+      padding: 0;
+      text-align: center;
+    }
+
+    nav a {
+      display: inline-block;
+      color: #fff;
+      text-decoration: none;
+      padding: 16px 28px;
+      font-size: 15px;
+      letter-spacing: 1px;
+      transition: background 0.2s;
+    }
+
+    nav a:hover {
+      background: #636e72;
+    }
+
+    main {
+      flex: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .intro h1 {
+      font-size: 32px;
+      margin-bottom: 16px;
+      color: #2d3436;
+    }
+
+    .intro p {
+      font-size: 18px;
+      color: #636e72;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .feature {
+      text-align: center;
+      padding: 30px 20px;
+      border-radius: 8px;
+      background: #fafafa;
+      border: 1px solid #f0f0f0;
+    }
+
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .feature h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #2d3436;
+    }
+
+    .feature p {
+      font-size: 15px;
+      color: #636e72;
+      line-height: 1.6;
+    }
+
+    footer {
+      background: #2d3436;
+      color: #b2bec3;
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #dfe6e9;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 40px 16px;
+      }
+
+      .logo-container {
+        max-width: 280px;
+      }
+
+      .intro h1 {
+        font-size: 26px;
+      }
+
+      .intro p {
+        font-size: 16px;
+      }
+
+      nav a {
+        padding: 12px 16px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <img src="assets/logo.svg" alt="Konfeks d.o.o. logo">
+    </div>
+  </header>
+
+  <nav>
+    <a href="#about">O nama</a>
+    <a href="#products">Proizvodi</a>
+    <a href="#contact">Kontakt</a>
+  </nav>
+
+  <main>
+    <section class="intro" id="about">
+      <h1>Dobro došli u Konfeks d.o.o.</h1>
+      <p>Tradicija kvalitete u konditorskoj industriji. Nudimo širok asortiman slatkiša i konditorskih proizvoda za sve prilike.</p>
+    </section>
+
+    <section class="features" id="products">
+      <div class="feature">
+        <div class="feature-icon">&#127852;</div>
+        <h3>Bomboni</h3>
+        <p>Ručno izrađeni bomboni s prirodnim sastojcima i bogatim okusima.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#127851;</div>
+        <h3>Čokolada</h3>
+        <p>Premium čokoladni proizvodi od pažljivo odabranog kakaa.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#127856;</div>
+        <h3>Poklon paketi</h3>
+        <p>Elegantno pakirani asortimani idealni za poklone i posebne prilike.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <p>&copy; 2026 Konfeks d.o.o. Sva prava pridržana.</p>
+  </footer>
+
+</body>
+</html>
