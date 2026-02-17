@@ -1,26 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160" width="480" height="160">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 280" width="520" height="280">
   <defs>
-    <linearGradient id="metallic" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#e0e0e0"/>
-      <stop offset="35%" style="stop-color:#c0c0c0"/>
+    <!-- Metallic gradient for swooshes -->
+    <linearGradient id="swoosh1Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#404040; stop-opacity:0.2"/>
+      <stop offset="20%" style="stop-color:#a0a0a0"/>
+      <stop offset="50%" style="stop-color:#e8e8e8"/>
+      <stop offset="80%" style="stop-color:#a0a0a0"/>
+      <stop offset="100%" style="stop-color:#404040; stop-opacity:0.2"/>
+    </linearGradient>
+    <linearGradient id="swoosh2Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#505050; stop-opacity:0.2"/>
+      <stop offset="20%" style="stop-color:#b0b0b0"/>
+      <stop offset="50%" style="stop-color:#f0f0f0"/>
+      <stop offset="80%" style="stop-color:#b0b0b0"/>
+      <stop offset="100%" style="stop-color:#505050; stop-opacity:0.2"/>
+    </linearGradient>
+    <!-- Text metallic gradient -->
+    <linearGradient id="textMetal" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8e8e8"/>
+      <stop offset="30%" style="stop-color:#d0d0d0"/>
       <stop offset="50%" style="stop-color:#f5f5f5"/>
-      <stop offset="65%" style="stop-color:#b0b0b0"/>
-      <stop offset="100%" style="stop-color:#909090"/>
+      <stop offset="70%" style="stop-color:#c0c0c0"/>
+      <stop offset="100%" style="stop-color:#a0a0a0"/>
     </linearGradient>
-    <linearGradient id="blueGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#0ea5e9; stop-opacity:0"/>
-      <stop offset="50%" style="stop-color:#38bdf8; stop-opacity:1"/>
+    <!-- Center glow -->
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff; stop-opacity:0.5"/>
+      <stop offset="40%" style="stop-color:#38bdf8; stop-opacity:0.15"/>
       <stop offset="100%" style="stop-color:#0ea5e9; stop-opacity:0"/>
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+    </radialGradient>
+    <!-- Soft glow filter -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
       <feMerge>
-        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-    <filter id="softGlow">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
+    <filter id="textGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -28,23 +46,34 @@
     </filter>
   </defs>
 
-  <!-- Subtle blue glow behind text -->
-  <ellipse cx="240" cy="70" rx="200" ry="50" fill="#0ea5e9" opacity="0.06"/>
+  <!-- Center glow behind swooshes -->
+  <ellipse cx="260" cy="100" rx="90" ry="70" fill="url(#centerGlow)"/>
+
+  <!-- Swoosh 1: top-left to bottom-right (like a tilted orbit) -->
+  <path d="M 40,30 Q 140,70 200,90 Q 260,110 320,100 Q 380,88 480,25"
+        fill="none" stroke="url(#swoosh1Grad)" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- Swoosh 1 thinner parallel -->
+  <path d="M 45,38 Q 145,76 205,95 Q 260,112 315,103 Q 375,93 475,33"
+        fill="none" stroke="url(#swoosh1Grad)" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Swoosh 2: bottom-left to top-right (crossing the first) -->
+  <path d="M 40,170 Q 140,130 200,110 Q 260,90 320,100 Q 380,112 480,175"
+        fill="none" stroke="url(#swoosh2Grad)" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- Swoosh 2 thinner parallel -->
+  <path d="M 45,162 Q 145,124 205,105 Q 260,88 315,97 Q 375,107 475,167"
+        fill="none" stroke="url(#swoosh2Grad)" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Bright intersection point -->
+  <circle cx="260" cy="100" r="6" fill="white" opacity="0.7" filter="url(#glow)"/>
+  <circle cx="260" cy="100" r="3" fill="white" opacity="0.9"/>
 
   <!-- Main text: KONFEKS -->
-  <text x="240" y="82" text-anchor="middle" font-family="'Inter', 'Montserrat', 'Arial', sans-serif" font-size="72" font-weight="800" fill="url(#metallic)" letter-spacing="8" filter="url(#glow)">
+  <text x="260" y="215" text-anchor="middle" font-family="'Inter', 'Montserrat', 'Arial', sans-serif" font-size="62" font-weight="800" fill="url(#textMetal)" letter-spacing="10" filter="url(#textGlow)">
     KONFEKS
   </text>
 
-  <!-- Blue accent line -->
-  <rect x="100" y="98" width="280" height="2" rx="1" fill="url(#blueGlow)" filter="url(#softGlow)"/>
-
-  <!-- Subtext: D.O.O. -->
-  <text x="240" y="130" text-anchor="middle" font-family="'Inter', 'Montserrat', 'Arial', sans-serif" font-size="24" font-weight="300" fill="#a0aec0" letter-spacing="14">
-    D.O.O.
+  <!-- Subtext: d.o.o. -->
+  <text x="260" y="252" text-anchor="middle" font-family="'Inter', 'Montserrat', 'Arial', sans-serif" font-size="22" font-weight="300" fill="#8899aa" letter-spacing="12">
+    d.o.o.
   </text>
-
-  <!-- Small accent dots -->
-  <circle cx="90" cy="99" r="3" fill="#38bdf8" opacity="0.8" filter="url(#softGlow)"/>
-  <circle cx="390" cy="99" r="3" fill="#38bdf8" opacity="0.8" filter="url(#softGlow)"/>
 </svg>

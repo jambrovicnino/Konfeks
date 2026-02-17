@@ -160,21 +160,16 @@
 
   <!-- ===== HERO SECTION ===== -->
   <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <!-- Background Image -->
-    <div class="absolute inset-0">
-      <img
-        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1920&q=80"
-        alt="Logistics fleet on European highway"
-        class="w-full h-full object-cover"
-      >
-      <div class="hero-overlay absolute inset-0"></div>
-    </div>
+    <!-- Animated Network Background -->
+    <canvas id="networkCanvas" class="absolute inset-0 w-full h-full"></canvas>
+    <!-- Subtle radial vignette over canvas -->
+    <div class="absolute inset-0 bg-gradient-to-b from-brand-black/30 via-transparent to-brand-black pointer-events-none"></div>
 
     <!-- Content -->
     <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
       <!-- Logo -->
       <div class="fade-in mb-10">
-        <img src="assets/logo.svg" alt="KONFEKS D.O.O." class="mx-auto w-72 md:w-96 logo-shimmer">
+        <img src="assets/logo.svg" alt="KONFEKS D.O.O." class="mx-auto w-80 md:w-[440px] drop-shadow-2xl">
       </div>
 
       <!-- Headline -->
@@ -641,6 +636,147 @@
         }
       });
     });
+
+    // ===== ANIMATED NETWORK / WEB BACKGROUND =====
+    (function () {
+      const canvas = document.getElementById('networkCanvas');
+      const ctx = canvas.getContext('2d');
+      let width, height, nodes, mouse, animId;
+
+      const NODE_COUNT_DESKTOP = 90;
+      const NODE_COUNT_MOBILE = 45;
+      const CONNECTION_DIST = 160;
+      const MOUSE_RADIUS = 200;
+
+      mouse = { x: -9999, y: -9999 };
+
+      function resize() {
+        width = canvas.width = canvas.offsetWidth;
+        height = canvas.height = canvas.offsetHeight;
+      }
+
+      function createNodes() {
+        const count = width < 768 ? NODE_COUNT_MOBILE : NODE_COUNT_DESKTOP;
+        nodes = [];
+        for (let i = 0; i < count; i++) {
+          nodes.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            r: Math.random() * 2 + 1.5,
+            bright: Math.random() > 0.85 // ~15% are highlighted "hub" nodes
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw connections
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const dx = nodes[i].x - nodes[j].x;
+            const dy = nodes[i].y - nodes[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CONNECTION_DIST) {
+              const opacity = (1 - dist / CONNECTION_DIST) * 0.35;
+              ctx.beginPath();
+              ctx.moveTo(nodes[i].x, nodes[i].y);
+              ctx.lineTo(nodes[j].x, nodes[j].y);
+              ctx.strokeStyle = `rgba(14, 165, 233, ${opacity})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Draw mouse connections
+        for (let i = 0; i < nodes.length; i++) {
+          const dx = nodes[i].x - mouse.x;
+          const dy = nodes[i].y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MOUSE_RADIUS) {
+            const opacity = (1 - dist / MOUSE_RADIUS) * 0.5;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(56, 189, 248, ${opacity})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+
+        // Draw nodes
+        for (let i = 0; i < nodes.length; i++) {
+          const n = nodes[i];
+          // Glow for bright nodes
+          if (n.bright) {
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.08)';
+            ctx.fill();
+          }
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+          ctx.fillStyle = n.bright ? 'rgba(56, 189, 248, 0.9)' : 'rgba(160, 174, 192, 0.6)';
+          ctx.fill();
+        }
+      }
+
+      function update() {
+        for (let i = 0; i < nodes.length; i++) {
+          const n = nodes[i];
+          n.x += n.vx;
+          n.y += n.vy;
+
+          // Bounce off edges softly
+          if (n.x < 0 || n.x > width) n.vx *= -1;
+          if (n.y < 0 || n.y > height) n.vy *= -1;
+
+          // Subtle mouse repulsion
+          const dx = n.x - mouse.x;
+          const dy = n.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MOUSE_RADIUS && dist > 0) {
+            const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS * 0.015;
+            n.vx += (dx / dist) * force;
+            n.vy += (dy / dist) * force;
+          }
+
+          // Dampen velocity
+          n.vx *= 0.999;
+          n.vy *= 0.999;
+        }
+      }
+
+      function animate() {
+        update();
+        draw();
+        animId = requestAnimationFrame(animate);
+      }
+
+      // Listen for mouse movement in hero
+      const heroSection = document.getElementById('home');
+      heroSection.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+      heroSection.addEventListener('mouseleave', () => {
+        mouse.x = -9999;
+        mouse.y = -9999;
+      });
+
+      window.addEventListener('resize', () => {
+        resize();
+        createNodes();
+      });
+
+      resize();
+      createNodes();
+      animate();
+    })();
   </script>
 
 </body>
